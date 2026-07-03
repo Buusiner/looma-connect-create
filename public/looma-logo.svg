@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <!-- Haste vertical do "l" com serifa arredondada na base esquerda -->
+  <rect x="18" y="10" width="22" height="52" rx="4" fill="white"/>
+  <!-- Serifa arredondada na base — corte do canto inferior esquerdo -->
+  <rect x="18" y="46" width="14" height="16" rx="8" fill="white"/>
+  <!-- Ponto circular à direita -->
+  <circle cx="58" cy="56" r="10" fill="white"/>
+</svg>

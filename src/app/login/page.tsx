@@ -12,18 +12,19 @@ function LoginForm() {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Step 1 — background fades in immediately after mount
+    // Step 1 — background fades in over 800ms (ease-in-out)
     if (wrapperRef.current) {
       wrapperRef.current.style.backgroundColor = "#050505";
     }
 
-    // Step 2 — card slides up after 350ms
+    // Step 2 — card appears only after 850ms (400ms ease-out)
     const timer = setTimeout(() => {
       if (cardRef.current) {
+        cardRef.current.style.visibility = "visible";
         cardRef.current.style.opacity = "1";
         cardRef.current.style.transform = "translateY(0px)";
       }
-    }, 350);
+    }, 850);
 
     return () => clearTimeout(timer);
   }, []);
@@ -33,9 +34,9 @@ function LoginForm() {
       ref={wrapperRef}
       className="flex min-h-screen items-center justify-center px-4"
       style={{
-        /* starts transparent, transitions to #050505 on mount */
+        /* starts transparent, transitions to #050505 over 800ms */
         backgroundColor: "transparent",
-        transition: "background-color 400ms ease-in",
+        transition: "background-color 800ms ease-in-out",
       }}
     >
       <div
@@ -47,10 +48,12 @@ function LoginForm() {
           border: "1px solid #222",
           borderRadius: "16px",
           padding: "40px",
-          /* starts hidden and shifted down */
+          /* hidden and shifted down — visibility:hidden guarantees
+             it won't flash before step 2 */
           opacity: 0,
-          transform: "translateY(16px)",
-          transition: "opacity 300ms ease-out, transform 300ms ease-out",
+          visibility: "hidden",
+          transform: "translateY(20px)",
+          transition: "opacity 400ms ease-out, transform 400ms ease-out",
         }}
       >
         {/* Logo */}

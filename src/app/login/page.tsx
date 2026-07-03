@@ -12,13 +12,16 @@ function LoginForm() {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // The overlay from the previous page already covers the screen in #050505.
-    // Remove it instantly (no transition) so it doesn't interfere.
+    // Zero the overlay instantly (no transition) — screen is already black.
     const overlay = document.getElementById("page-transition-overlay");
     if (overlay) {
       overlay.style.transition = "none";
       overlay.style.opacity = "0";
       overlay.style.pointerEvents = "none";
+      // Restore transition after zeroing so future navigations still animate.
+      requestAnimationFrame(() => {
+        overlay.style.transition = "opacity 900ms ease-in-out";
+      });
     }
 
     // Card appears after 850ms (400ms ease-out)

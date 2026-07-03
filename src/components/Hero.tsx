@@ -2,7 +2,6 @@
 
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 /* ─── Ease curve shared across all entrance animations ─────────────────────── */
 const ease = [0.25, 0.1, 0.25, 1] as const;
@@ -19,7 +18,6 @@ export default function Hero() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const formControls = useAnimation();
-  const router = useRouter();
 
   /* Basic e-mail validation: must contain "@" and "." after the "@" */
   function isValidEmail(value: string) {
@@ -42,8 +40,10 @@ export default function Hero() {
     }
 
     // Navigate only after overlay has covered the screen (950ms)
+    // Use window.location.href instead of router.push to ensure the overlay
+    // remains visible during the full-page navigation (required for static export).
     setTimeout(() => {
-      router.push(`/login?email=${encodeURIComponent(email)}`);
+      window.location.href = `/login?email=${encodeURIComponent(email)}`;
     }, 950);
   }
 

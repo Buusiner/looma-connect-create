@@ -2,18 +2,44 @@
 
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
 
 function LoginForm() {
   const searchParams = useSearchParams();
   const emailParam = searchParams.get("email") ?? "";
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Step 1 — background fades in immediately after mount
+    if (wrapperRef.current) {
+      wrapperRef.current.style.backgroundColor = "#050505";
+    }
+
+    // Step 2 — card slides up after 350ms
+    const timer = setTimeout(() => {
+      if (cardRef.current) {
+        cardRef.current.style.opacity = "1";
+        cardRef.current.style.transform = "translateY(0px)";
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div
+      ref={wrapperRef}
       className="flex min-h-screen items-center justify-center px-4"
-      style={{ background: "#050505" }}
+      style={{
+        /* starts transparent, transitions to #050505 on mount */
+        backgroundColor: "transparent",
+        transition: "background-color 400ms ease-in",
+      }}
     >
       <div
+        ref={cardRef}
         className="w-full"
         style={{
           maxWidth: "400px",
@@ -21,6 +47,10 @@ function LoginForm() {
           border: "1px solid #222",
           borderRadius: "16px",
           padding: "40px",
+          /* starts hidden and shifted down */
+          opacity: 0,
+          transform: "translateY(16px)",
+          transition: "opacity 300ms ease-out, transform 300ms ease-out",
         }}
       >
         {/* Logo */}

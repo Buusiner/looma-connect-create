@@ -77,3 +77,18 @@ body {
 .float-3 {
   animation: float-3 6.5s ease-in-out infinite;
 }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tagline-animation {
+  animation: fadeInUp 600ms ease-out 200ms both;
+}

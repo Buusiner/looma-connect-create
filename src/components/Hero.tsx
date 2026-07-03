@@ -119,7 +119,7 @@ export default function Hero() {
           desenvolvedores e muito mais, tudo em um único lugar. Conecte-se.
         </motion.p>
 
-        <p className="mt-4 text-xs text-text-tertiary">
+        <p className="mt-4 text-xs text-text-tertiary tagline-animation">
           We are building connections.
         </p>
 

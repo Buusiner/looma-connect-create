@@ -168,7 +168,8 @@ function RegisterTab({ onSwitchTab }: { onSwitchTab: () => void }) {
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length === 0) {
-      // TODO: integrate Supabase auth
+      // TODO: integrate Supabase auth — createUser(email, password, name)
+      window.location.href = "/onboarding/foto";
     }
   }
 
@@ -185,7 +186,7 @@ function RegisterTab({ onSwitchTab }: { onSwitchTab: () => void }) {
         {/* Name */}
         <div className="flex flex-col gap-1">
           <label htmlFor="reg-name" className="text-[13px] font-medium" style={{ color: "#A3A3A3" }}>
-            Nome completo
+            Como vamos te chamar?
           </label>
           <input
             id="reg-name"

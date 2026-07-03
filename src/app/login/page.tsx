@@ -72,10 +72,10 @@ function LoginForm() {
             className="object-contain"
           />
           <span
-            className="text-lg font-semibold"
-            style={{ color: "#FF6452" }}
+            className="font-bold"
+            style={{ color: "#FF6452", fontSize: "24px" }}
           >
-            looma
+            Looma
           </span>
         </div>
 

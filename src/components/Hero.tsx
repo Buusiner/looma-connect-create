@@ -33,7 +33,18 @@ export default function Hero() {
       return;
     }
     setEmailError("");
-    router.push(`/login?email=${encodeURIComponent(email)}`);
+
+    // Activate the global overlay — page darkens over 900ms ease-in-out
+    const overlay = document.getElementById("page-transition-overlay");
+    if (overlay) {
+      overlay.style.opacity = "1";
+      overlay.style.pointerEvents = "all";
+    }
+
+    // Navigate only after overlay has covered the screen (950ms)
+    setTimeout(() => {
+      router.push(`/login?email=${encodeURIComponent(email)}`);
+    }, 950);
   }
 
   useEffect(() => {

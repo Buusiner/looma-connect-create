@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import PageTransitionOverlay from "@/components/PageTransitionOverlay";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -41,6 +42,7 @@ export default function RootLayout({
       className={`${inter.variable} ${geistSans.variable} antialiased`}
     >
       <body className="min-h-screen bg-background text-foreground">
+        <PageTransitionOverlay />
         {children}
       </body>
     </html>

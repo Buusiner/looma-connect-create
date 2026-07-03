@@ -12,12 +12,16 @@ function LoginForm() {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Step 1 — background fades in over 800ms (ease-in-out)
-    if (wrapperRef.current) {
-      wrapperRef.current.style.backgroundColor = "#050505";
+    // The overlay from the previous page already covers the screen in #050505.
+    // Remove it instantly (no transition) so it doesn't interfere.
+    const overlay = document.getElementById("page-transition-overlay");
+    if (overlay) {
+      overlay.style.transition = "none";
+      overlay.style.opacity = "0";
+      overlay.style.pointerEvents = "none";
     }
 
-    // Step 2 — card appears only after 850ms (400ms ease-out)
+    // Card appears after 850ms (400ms ease-out)
     const timer = setTimeout(() => {
       if (cardRef.current) {
         cardRef.current.style.visibility = "visible";
@@ -34,9 +38,8 @@ function LoginForm() {
       ref={wrapperRef}
       className="flex min-h-screen items-center justify-center px-4"
       style={{
-        /* starts transparent, transitions to #050505 over 800ms */
-        backgroundColor: "transparent",
-        transition: "background-color 800ms ease-in-out",
+        /* overlay already set the screen to #050505 before navigation */
+        backgroundColor: "#050505",
       }}
     >
       <div

@@ -63,7 +63,7 @@ function LoginForm() {
         }}
       >
         {/* Logo */}
-        <div className="mb-8 flex items-center justify-center gap-2">
+        <div className="mb-8 flex w-full items-center justify-center gap-2">
           <Image
             src="/looma-logo.png"
             alt="Looma"
@@ -72,8 +72,8 @@ function LoginForm() {
             className="object-contain"
           />
           <span
-            className="font-bold"
-            style={{ color: "#FF6452", fontSize: "24px" }}
+            className="font-bold leading-none"
+            style={{ color: "#FF6452", fontSize: "32px" }}
           >
             Looma
           </span>

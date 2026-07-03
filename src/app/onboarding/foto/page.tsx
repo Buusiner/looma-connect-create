@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 
-/* ─── Next step after onboarding (update when dashboard route exists) ──────── */
-const NEXT_ROUTE = "/";
+/* ─── Next step after foto: links ──────────────────────────────────────────── */
+const NEXT_ROUTE = "/onboarding/links";
 
 /* ─── Camera icon ──────────────────────────────────────────────────────────── */
 function CameraIcon() {
@@ -76,9 +76,9 @@ export default function OnboardingFotoPage() {
           />
           <span
             className="font-bold leading-none"
-            style={{ color: "#FF6452", fontSize: "32px" }}
+            style={{ color: "#FF6452", fontSize: "20px" }}
           >
-            Looma
+            looma
           </span>
         </div>
 

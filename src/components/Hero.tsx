@@ -2,6 +2,7 @@
 
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 /* ─── Ease curve shared across all entrance animations ─────────────────────── */
 const ease = [0.25, 0.1, 0.25, 1] as const;
@@ -16,7 +17,24 @@ const LIME_GLOW = "rgba(223,255,79,0.35)";
 
 export default function Hero() {
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const formControls = useAnimation();
+  const router = useRouter();
+
+  /* Basic e-mail validation: must contain "@" and "." after the "@" */
+  function isValidEmail(value: string) {
+    const at = value.indexOf("@");
+    return at > 0 && value.indexOf(".", at) > at + 1;
+  }
+
+  function handleSubmit() {
+    if (!isValidEmail(email)) {
+      setEmailError("Digite um e-mail válido.");
+      return;
+    }
+    setEmailError("");
+    router.push(`/login?email=${encodeURIComponent(email)}`);
+  }
 
   useEffect(() => {
     formControls.set({ opacity: 0, y: 24, scale: 1 });
@@ -96,48 +114,53 @@ export default function Hero() {
 
         {/* ── Email CTA — pill wrapping input + glowing button ───────────────── */}
         <motion.div
-          className="mx-auto flex items-center rounded-full border px-2 py-2"
-          style={{
-            maxWidth: "440px",
-            marginTop: "36px",           /* ~32–40px gap from subtitle */
-            /*
-             * Match the navbar pill aesthetic exactly:
-             * same background (#1A1A1A) and same subtle border opacity.
-             */
-            background: "#1A1A1A",
-            borderColor: "rgba(255,255,255,0.08)",
-            boxShadow: "0px 4px 16px rgba(0,0,0,0.4)",
-          }}
+          className="mx-auto"
+          style={{ maxWidth: "440px", marginTop: "36px" }}
           animate={formControls}
         >
-          {/* Email input — transparent, stretches to fill remaining space */}
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="seu@email.com"
-            className="flex-1 bg-transparent pl-4 pr-2 text-[14px] font-normal outline-none placeholder:text-[#555]"
-            style={{ color: "#D0D0D0" }}
-            aria-label="Seu endereço de e-mail"
-          />
-
-          {/* Submit button — solid brand color */}
-          <button
-            type="button"
-            className="shrink-0 rounded-full px-5 py-[11px] text-[14px] font-semibold transition-transform duration-150 hover:-translate-y-px active:translate-y-0"
+          <div
+            className="flex items-center rounded-full border px-2 py-2"
             style={{
-              background: "#FF6452",
-              color: "#FFFFFF",
-            }}
-            onClick={() => {
-              if (email) {
-                alert(`Obrigado! Entraremos em contato em breve: ${email}`);
-                setEmail("");
-              }
+              background: "#1A1A1A",
+              borderColor: emailError ? "#FF6452" : "rgba(255,255,255,0.08)",
+              boxShadow: "0px 4px 16px rgba(0,0,0,0.4)",
             }}
           >
-            Comece agora
-          </button>
+            {/* Email input — transparent, stretches to fill remaining space */}
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError("");
+              }}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+              placeholder="seu@email.com"
+              className="flex-1 bg-transparent pl-4 pr-2 text-[14px] font-normal outline-none placeholder:text-[#555]"
+              style={{ color: "#D0D0D0" }}
+              aria-label="Seu endereço de e-mail"
+            />
+
+            {/* Submit button — solid brand color */}
+            <button
+              type="button"
+              className="shrink-0 rounded-full px-5 py-[11px] text-[14px] font-semibold transition-transform duration-150 hover:-translate-y-px active:translate-y-0"
+              style={{ background: "#FF6452", color: "#FFFFFF" }}
+              onClick={handleSubmit}
+            >
+              Comece agora
+            </button>
+          </div>
+
+          {/* Inline error message */}
+          {emailError && (
+            <p
+              className="mt-2 pl-4 text-left"
+              style={{ fontSize: "13px", color: "#FF6452" }}
+            >
+              {emailError}
+            </p>
+          )}
         </motion.div>
 
       </div>

@@ -100,6 +100,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       router.push("/dashboard");
       return { error: null };
     } catch (err) {
+      console.error("ERRO CAPTURADO NO CATCH:", err);
       console.error(err);
       return { error: "Algo deu errado. Tente novamente." };
     }

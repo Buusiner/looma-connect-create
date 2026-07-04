@@ -102,12 +102,13 @@ export default function OnboardingPerfilPage() {
     setLoading(true);
     setSubmitError(null);
     setOnboardingData({ tipos: selected as string[] });
-    const { error } = await submitOnboarding();
-    if (error) {
-      setSubmitError(error);
+    try {
+      const { error } = await submitOnboarding();
+      if (error) setSubmitError(error);
+      // On success, submitOnboarding() navigates to /dashboard — component unmounts.
+    } finally {
       setLoading(false);
     }
-    // On success, submitOnboarding() navigates to /dashboard — no action needed here.
   }
 
   return (

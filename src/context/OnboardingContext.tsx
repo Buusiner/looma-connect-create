@@ -50,48 +50,59 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   }> => {
     const supabase = createClient();
 
-    /* a) Get authenticated user */
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return { error: "Algo deu errado. Tente novamente." };
-
-    let avatarUrl: string | null = null;
-
-    /* b) Upload photo if provided */
-    if (onboardingData.fotoFile) {
-      const { data: uploadData, error: uploadError } =
-        await supabase.storage
-          .from("avatars")
-          .upload(`${user.id}/${Date.now()}`, onboardingData.fotoFile, {
-            upsert: true,
-            contentType: onboardingData.fotoFile.type,
-          });
-
-      if (uploadError) return { error: "Algo deu errado. Tente novamente." };
-
+    try {
+      /* a) Get authenticated user */
       const {
-        data: { publicUrl },
-      } = supabase.storage.from("avatars").getPublicUrl(uploadData.path);
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return { error: "Algo deu errado. Tente novamente." };
 
-      avatarUrl = publicUrl ?? null;
+      let avatarUrl: string | null = null;
+
+      /* b) Upload photo if provided */
+      if (onboardingData.fotoFile) {
+        const { data: uploadData, error: uploadError } =
+          await supabase.storage
+            .from("avatars")
+            .upload(`${user.id}/${Date.now()}`, onboardingData.fotoFile, {
+              upsert: true,
+              contentType: onboardingData.fotoFile.type,
+            });
+
+        if (uploadError) {
+          console.error(uploadError);
+          return { error: "Algo deu errado. Tente novamente." };
+        }
+
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("avatars").getPublicUrl(uploadData.path);
+
+        avatarUrl = publicUrl ?? null;
+      }
+
+      /* c) Upsert profile row */
+      const { error: upsertError } = await supabase.from("profiles").upsert({
+        id: user.id,
+        avatar_url: avatarUrl,
+        link_x: onboardingData.linkX || null,
+        link_instagram: onboardingData.linkInstagram || null,
+        link_youtube: onboardingData.linkYoutube || null,
+        tipos: onboardingData.tipos,
+      });
+
+      if (upsertError) {
+        console.error(upsertError);
+        return { error: "Algo deu errado. Tente novamente." };
+      }
+
+      /* d) Navigate to dashboard only on success */
+      router.push("/dashboard");
+      return { error: null };
+    } catch (err) {
+      console.error(err);
+      return { error: "Algo deu errado. Tente novamente." };
     }
-
-    /* c) Upsert profile row */
-    const { error: upsertError } = await supabase.from("profiles").upsert({
-      id: user.id,
-      avatar_url: avatarUrl,
-      link_x: onboardingData.linkX || null,
-      link_instagram: onboardingData.linkInstagram || null,
-      link_youtube: onboardingData.linkYoutube || null,
-      tipos: onboardingData.tipos,
-    });
-
-    if (upsertError) return { error: "Algo deu errado. Tente novamente." };
-
-    /* d) Navigate to dashboard only on success */
-    router.push("/dashboard");
-    return { error: null };
   }, [onboardingData, router]);
 
   return (

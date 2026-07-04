@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-
-const NEXT_ROUTE = "/dashboard";
+import { useOnboarding } from "@/context/OnboardingContext";
 
 /* ─── Role options ─────────────────────────────────────────────────────────── */
 const ROLES = [
@@ -87,7 +86,10 @@ const ROLES = [
 type RoleId = typeof ROLES[number]["id"];
 
 export default function OnboardingPerfilPage() {
+  const { setOnboardingData, submitOnboarding } = useOnboarding();
   const [selected, setSelected] = useState<RoleId[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   function toggle(id: RoleId) {
     setSelected((prev) =>
@@ -95,11 +97,17 @@ export default function OnboardingPerfilPage() {
     );
   }
 
-  function handleConcluir() {
-    // TODO: salvar roles na tabela profiles do Supabase
-    // supabase.from('profiles').update({ roles: selected }).eq('id', userId)
-    // Coluna necessária: roles text[] (array de texto)
-    window.location.href = NEXT_ROUTE;
+  async function handleConcluir() {
+    if (selected.length === 0) return;
+    setLoading(true);
+    setSubmitError(null);
+    setOnboardingData({ tipos: selected as string[] });
+    const { error } = await submitOnboarding();
+    if (error) {
+      setSubmitError(error);
+      setLoading(false);
+    }
+    // On success, submitOnboarding() navigates to /dashboard — no action needed here.
   }
 
   return (
@@ -158,10 +166,7 @@ export default function OnboardingPerfilPage() {
                   cursor: "pointer",
                 }}
               >
-                <span
-                  className="shrink-0"
-                  style={{ color: isSelected ? "#FF6452" : "#555" }}
-                >
+                <span className="shrink-0" style={{ color: isSelected ? "#FF6452" : "#555" }}>
                   {role.icon}
                 </span>
                 <span className="text-[14px] font-medium">{role.label}</span>
@@ -170,19 +175,29 @@ export default function OnboardingPerfilPage() {
           })}
         </div>
 
+        {/* Inline error */}
+        {submitError && (
+          <p
+            className="mb-4 text-center"
+            style={{ color: "#FF6452", fontSize: "13px" }}
+          >
+            {submitError}
+          </p>
+        )}
+
         {/* Conclude button */}
         <button
           type="button"
-          disabled={selected.length === 0}
+          disabled={selected.length === 0 || loading}
           onClick={handleConcluir}
           className="w-full rounded-full py-3 text-[14px] font-semibold text-white transition-opacity hover:opacity-90 active:opacity-75"
           style={{
             background: "#FF6452",
-            opacity: selected.length > 0 ? 1 : 0.5,
-            cursor: selected.length > 0 ? "pointer" : "not-allowed",
+            opacity: selected.length > 0 && !loading ? 1 : 0.5,
+            cursor: selected.length > 0 && !loading ? "pointer" : "not-allowed",
           }}
         >
-          Concluir cadastro
+          {loading ? "Salvando..." : "Concluir cadastro"}
         </button>
       </div>
     </div>

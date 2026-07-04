@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-
-/* ─── Next step after foto: links ──────────────────────────────────────────── */
-const NEXT_ROUTE = "/onboarding/links";
+import { useRouter } from "next/navigation";
+import { useOnboarding } from "@/context/OnboardingContext";
 
 /* ─── Camera icon ──────────────────────────────────────────────────────────── */
 function CameraIcon() {
@@ -27,10 +26,12 @@ function CameraIcon() {
 }
 
 export default function OnboardingFotoPage() {
+  const { setOnboardingData } = useOnboarding();
+  const router = useRouter();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  // TODO: integrar upload real — armazenar o File aqui para envio futuro
-  const [, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -42,12 +43,13 @@ export default function OnboardingFotoPage() {
   }
 
   function handleContinue() {
-    // TODO: integrar upload real do arquivo antes de navegar
-    window.location.href = NEXT_ROUTE;
+    setOnboardingData({ fotoFile: selectedFile });
+    router.push("/onboarding/links");
   }
 
   function handleSkip() {
-    window.location.href = NEXT_ROUTE;
+    setOnboardingData({ fotoFile: null });
+    router.push("/onboarding/links");
   }
 
   return (

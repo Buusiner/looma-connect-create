@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useState } from "react";
-
-const NEXT_ROUTE = "/onboarding/perfil";
+import { useRouter } from "next/navigation";
+import { useOnboarding } from "@/context/OnboardingContext";
 
 /* ─── Shared input style ───────────────────────────────────────────────────── */
 const inputClass =
@@ -74,19 +74,21 @@ function SocialInput({
 }
 
 export default function OnboardingLinksPage() {
+  const { setOnboardingData } = useOnboarding();
+  const router = useRouter();
+
   const [linkX, setLinkX] = useState("");
   const [linkInstagram, setLinkInstagram] = useState("");
   const [linkYoutube, setLinkYoutube] = useState("");
 
   function handleContinue() {
-    // TODO: salvar link_x, link_instagram, link_youtube na tabela profiles do Supabase
-    // supabase.from('profiles').update({ link_x: linkX, link_instagram: linkInstagram, link_youtube: linkYoutube }).eq('id', userId)
-    // Colunas necessárias na tabela profiles: link_x text, link_instagram text, link_youtube text
-    window.location.href = NEXT_ROUTE;
+    setOnboardingData({ linkX, linkInstagram, linkYoutube });
+    router.push("/onboarding/perfil");
   }
 
   function handleSkip() {
-    window.location.href = NEXT_ROUTE;
+    setOnboardingData({ linkX: "", linkInstagram: "", linkYoutube: "" });
+    router.push("/onboarding/perfil");
   }
 
   return (

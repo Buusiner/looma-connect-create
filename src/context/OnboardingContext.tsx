@@ -70,7 +70,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
             });
 
         if (uploadError) {
-          console.error(uploadError);
+          console.error("ERRO SUPABASE:", JSON.stringify(uploadError, null, 2));
           return { error: "Algo deu errado. Tente novamente." };
         }
 
@@ -92,7 +92,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       });
 
       if (upsertError) {
-        console.error(upsertError);
+        console.error("ERRO SUPABASE:", JSON.stringify(upsertError, null, 2));
         return { error: "Algo deu errado. Tente novamente." };
       }
 

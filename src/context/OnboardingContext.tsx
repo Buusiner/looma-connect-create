@@ -52,10 +52,11 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
     try {
       /* a) Get authenticated user */
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return { error: "Algo deu errado. Tente novamente." };
+      const { data: { user }, error: getUserError } = await supabase.auth.getUser();
+      if (!user) {
+        console.error("USUARIO NAO ENCONTRADO. Erro do getUser:", JSON.stringify(getUserError, null, 2));
+        return { error: "Algo deu errado. Tente novamente." };
+      }
 
       let avatarUrl: string | null = null;
 

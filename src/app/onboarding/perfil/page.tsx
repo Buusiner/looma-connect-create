@@ -98,6 +98,7 @@ export default function OnboardingPerfilPage() {
   }
 
   async function handleConcluir() {
+    console.log("CLICK: iniciou submissão", { selectedRoles: selected });
     if (selected.length === 0) return;
     setLoading(true);
     setSubmitError(null);
@@ -187,6 +188,7 @@ export default function OnboardingPerfilPage() {
         )}
 
         {/* Conclude button */}
+        {console.log("DISABLED STATE:", selected.length === 0 || loading)}
         <button
           type="button"
           disabled={selected.length === 0 || loading}
